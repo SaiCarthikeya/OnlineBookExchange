@@ -121,34 +121,8 @@ class OnlineBookExchange extends Component {
     renderAbout = () => {
         return (
             <div className='about-container'>
-                <h1 className='about-header'>DTIS PROTOTYPE</h1>
-                <h2 className='participants'>Participants:</h2>
-                <div className='names-container'>
-                    <div className='name-rollno'>
-                        <p className='aboutText'>SAI CHAND REDDY</p>
-                        <p className='aboutText'>22R01A0575</p>
-                    </div>
-                    <div className='name-rollno'>
-                        <p className='aboutText'>RAKESH</p>
-                        <p className='aboutText'>22R01A0584</p>
-                    </div>
-                    <div className='name-rollno'>
-                        <p className='aboutText'>SIDDESHWARI</p>
-                        <p className='aboutText'>22R01A0589</p>
-                    </div>
-                    <div className='name-rollno'>
-                        <p className='aboutText'>SAI KARTHIKEYA</p>
-                        <p className='aboutText'>22R01A0597</p>
-                    </div>
-                    <div className='name-rollno'>
-                        <p className='aboutText'>ABHIRAMA SURYATEJA</p>
-                        <p className='aboutText'>22R01A05A1</p>
-                    </div>
-                    <div className='name-rollno'>
-                        <p className='aboutText'>DURGA DEVI</p>
-                        <p className='aboutText'>22R01A05B8</p>
-                    </div>
-                </div>
+                <h1 className='about-header'>ONLINE BOOK EXCHANGE PROTOTYPE</h1>
+                <p>Edit this about element as you wish</p>
             </div>
         )
     }
