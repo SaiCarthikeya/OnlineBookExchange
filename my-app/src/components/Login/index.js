@@ -29,7 +29,7 @@ const Login = () => {
     }
 };
   return (
-    <div className="bg-container">
+    <div className="a-bg-container">
       <div className="login-container">
         <h1 className="login-header">Login</h1>
         <input

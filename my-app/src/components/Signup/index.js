@@ -30,7 +30,7 @@ const Signup = () => {
   };
 
   return (
-    <div className="bg-container">
+    <div className="a-bg-container">
       <div className="signup-container">
         <h1 className="signup-header">Sign Up</h1>
         <input
