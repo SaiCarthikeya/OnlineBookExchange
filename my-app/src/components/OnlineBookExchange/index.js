@@ -1,72 +1,80 @@
-import {Component} from 'react'
-import Header from '../Header'
-import HistoryItem from '../HistoryItem'
-import BooksContainer from '../BooksContainer'
-import './index.css'
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import Header from '../Header';
+import HistoryItem from '../HistoryItem';
+import BooksContainer from '../BooksContainer';
+import './index.css';
 
 class OnlineBookExchange extends Component {
-    state = {currentTab: 'home', yourBooksList: [], searchType: 'findBook', 
-    requestedBooks: [], searchValue: '', isSearchOn: false, displayAdded: false, historySelector: 'requestedBooks'}
+    state = {
+        currentTab: 'home',
+        yourBooksList: [],
+        searchType: 'findBook',
+        requestedBooks: [],
+        searchValue: '',
+        isSearchOn: false,
+        displayAdded: false,
+        historySelector: 'requestedBooks',
+        isAuthenticated: localStorage.getItem('isAuthenticated') === 'true', // Add this line
+    };
 
     changeSearchType = () => {
         this.setState((previousState) => {
             if (previousState.searchType === 'findBook') {
-                return { searchType: 'addBook' }
+                return { searchType: 'addBook' };
             }
-            return { searchType: 'findBook' }
-        })
-    }
+            return { searchType: 'findBook' };
+        });
+    };
 
     changeHistoryType = () => {
         this.setState((prevState) => {
             if (prevState.historySelector === 'requestedBooks') {
-                return { historySelector: 'yourBooks' }
+                return { historySelector: 'yourBooks' };
             } else if (prevState.historySelector === 'yourBooks') {
-                return { historySelector: 'requestedBooks' }
+                return { historySelector: 'requestedBooks' };
             }
-        })
-    }
-
+        });
+    };
 
     addBook = (book) => {
         this.setState((previousState) => {
             if (previousState.searchType === 'findBook') {
-                return {requestedBooks: [...previousState.requestedBooks, book], displayAdded: true}
+                return { requestedBooks: [...previousState.requestedBooks, book], displayAdded: true };
             }
-            return {yourBooksList: [...previousState.yourBooksList, book], displayAdded: true}
-        })
-    }
-
+            return { yourBooksList: [...previousState.yourBooksList, book], displayAdded: true };
+        });
+    };
 
     changeTab = (value) => {
-        this.setState({currentTab: value, displayAdded: false})
-    }
+        this.setState({ currentTab: value, displayAdded: false });
+    };
 
     updateSearchValue = (e) => {
-        this.setState({searchValue: e.target.value})
-    }
+        this.setState({ searchValue: e.target.value });
+    };
 
     triggerSearchOnEnter = (e) => {
         if (e.key === 'Enter') {
-            this.setState({isSearchOn: true})
+            this.setState({ isSearchOn: true });
         }
-    }
+    };
 
     removeBook = (id) => {
         this.setState((previousState) => {
             if (previousState.historySelector === 'requestedBooks') {
-                return {requestedBooks: previousState.requestedBooks.filter((eachBook) => eachBook.id !== id)}
+                return { requestedBooks: previousState.requestedBooks.filter((eachBook) => eachBook.id !== id) };
             }
-            return {yourBooksList: previousState.yourBooksList.filter((eachBook) => eachBook.id !== id)}
-        })
-    }
+            return { yourBooksList: previousState.yourBooksList.filter((eachBook) => eachBook.id !== id) };
+        });
+    };
 
     renderHome = () => {
-        const {searchType, searchValue, isSearchOn, displayAdded} = this.state 
-        const buttonContent = searchType === 'findBook' ? 'Add Book' : 'Find Book'
-        const addSectionContent = searchType === 'findBook' ? 'Requested the book to the people who added the book.' : 'Added your books for others to find.'
-        const headContent = searchType === 'findBook' ? 'Find The Books You Love ...' : 'Add Your Book For Others To Trade ...'
-    
+        const { searchType, searchValue, isSearchOn, displayAdded } = this.state;
+        const buttonContent = searchType === 'findBook' ? 'Add Book' : 'Find Book';
+        const addSectionContent = searchType === 'findBook' ? 'Requested the book to the people who added the book.' : 'Added your books for others to find.';
+        const headContent = searchType === 'findBook' ? 'Find The Books You Love ...' : 'Add Your Book For Others To Trade ...';
+
         return (
             <div className="home-container">
                 {displayAdded ? (
@@ -87,22 +95,22 @@ class OnlineBookExchange extends Component {
                             />
                         </div>
                         <h1 className="home-header">{headContent}</h1>
-                        {isSearchOn && <BooksContainer searchValue={searchValue} searchType={searchType} addBook={this.addBook}/>}
+                        {isSearchOn && <BooksContainer searchValue={searchValue} searchType={searchType} addBook={this.addBook} />}
                     </>
                 )}
             </div>
-        )
-    }
+        );
+    };
 
     renderHistory = () => {
-        const {yourBooksList, requestedBooks, historySelector} = this.state 
-        const requestedBooksClass = historySelector === 'requestedBooks'? 'selected-left': ''
-        const yourBooksClass = historySelector === 'yourBooks'? 'selected-right': ''
-        let historyContainer
+        const { yourBooksList, requestedBooks, historySelector } = this.state;
+        const requestedBooksClass = historySelector === 'requestedBooks' ? 'selected-left' : '';
+        const yourBooksClass = historySelector === 'yourBooks' ? 'selected-right' : '';
+        let historyContainer;
         if (historySelector === 'requestedBooks') {
-            historyContainer = requestedBooks.map((eachBook) => <HistoryItem key={eachBook.id} bookDetails={eachBook} removeBook={this.removeBook}/>)
+            historyContainer = requestedBooks.map((eachBook) => <HistoryItem key={eachBook.id} bookDetails={eachBook} removeBook={this.removeBook} />);
         } else {
-            historyContainer = yourBooksList.map((eachBook) => <HistoryItem key={eachBook.id} bookDetails={eachBook} removeBook={this.removeBook}/>)
+            historyContainer = yourBooksList.map((eachBook) => <HistoryItem key={eachBook.id} bookDetails={eachBook} removeBook={this.removeBook} />);
         }
 
         return (
@@ -115,38 +123,56 @@ class OnlineBookExchange extends Component {
                     {historyContainer}
                 </div>
             </div>
-        )
-    }
+        );
+    };
 
     renderAbout = () => {
         return (
             <div className='about-container'>
                 <h1 className='about-header'>ONLINE BOOK EXCHANGE PROTOTYPE</h1>
-                <p>Edit this about element as you wish</p>
+                <p>A place where you can lend and borrow books.</p>
             </div>
-        )
-    }
-    
+        );
+    };
 
-    render () {
-        const {currentTab} = this.state
-        let component = null 
+    renderNotAuthenticated = () => {
+        return (
+            <div className="not-authenticated-container">
+                <h1 className="home-header">Welcome to Online Book Exchange</h1>
+                <p>Please log in or sign up to continue</p>
+                <div className="auth-buttons">
+                    <Link to="/login" className="btn">Login</Link>
+                    <Link to="/signup" className="btn">Sign Up</Link>
+                </div>
+            </div>
+        );
+    };
+
+    render() {
+        const { currentTab, isAuthenticated } = this.state;
+        let component = null;
+        if (!isAuthenticated) {
+            return (
+                <div className="bg-container">
+                    {this.renderNotAuthenticated()}
+                </div>
+            );
+        }
+
         if (currentTab === 'home') {
-            component = this.renderHome()
+            component = this.renderHome();
+        } else if (currentTab === 'history') {
+            component = this.renderHistory();
+        } else if (currentTab === 'about') {
+            component = this.renderAbout();
         }
-        else if (currentTab === 'history') {
-            component = this.renderHistory()
-        }
-        else if (currentTab === 'about') {
-            component = this.renderAbout()
-        }
-        return(
+        return (
             <div className="bg-container">
-                <Header currentTab={currentTab} changeTab={this.changeTab}/>
+                <Header currentTab={currentTab} changeTab={this.changeTab} />
                 {component}
             </div>
-        )
+        );
     }
 }
 
-export default OnlineBookExchange
+export default OnlineBookExchange;
