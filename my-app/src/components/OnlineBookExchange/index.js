@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import Header from '../Header';
 import HistoryItem from '../HistoryItem';
 import BooksContainer from '../BooksContainer';
@@ -15,8 +15,16 @@ class OnlineBookExchange extends Component {
         isSearchOn: false,
         displayAdded: false,
         historySelector: 'requestedBooks',
-        isAuthenticated: localStorage.getItem('isAuthenticated') === 'true', // Add this line
+        isAuthenticated: localStorage.getItem('isAuthenticated') === 'true',
+        userId: '', // Add this line to store the user ID
     };
+
+    componentDidMount() {
+        const { state } = this.props.location;
+        if (state && state.userId) {
+            this.setState({ userId: state.userId });
+        }
+    }
 
     changeSearchType = () => {
         this.setState((previousState) => {
@@ -149,30 +157,44 @@ class OnlineBookExchange extends Component {
     };
 
     render() {
-        const { currentTab, isAuthenticated } = this.state;
+        const { currentTab, isAuthenticated, userId } = this.state;
         let component = null;
+
         if (!isAuthenticated) {
             return (
-                <div className="bg-container">
+                <div className="online-book-exchange-container">
+                    <Header changeTab={this.changeTab} />
                     {this.renderNotAuthenticated()}
                 </div>
             );
         }
 
-        if (currentTab === 'home') {
-            component = this.renderHome();
-        } else if (currentTab === 'history') {
-            component = this.renderHistory();
-        } else if (currentTab === 'about') {
-            component = this.renderAbout();
+        switch (currentTab) {
+            case 'home':
+                component = this.renderHome();
+                break;
+            case 'history':
+                component = this.renderHistory();
+                break;
+            case 'about':
+                component = this.renderAbout();
+                break;
+            default:
+                component = this.renderHome();
         }
+
         return (
-            <div className="bg-container">
-                <Header currentTab={currentTab} changeTab={this.changeTab} />
+            <div className="online-book-exchange-container">
+                <Header changeTab={this.changeTab} currentTab={this.state.currentTab}/>
                 {component}
             </div>
         );
     }
 }
 
-export default OnlineBookExchange;
+const WithLocation = (props) => {
+    const location = useLocation();
+    return <OnlineBookExchange {...props} location={location} />;
+};
+
+export default WithLocation;

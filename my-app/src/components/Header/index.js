@@ -1,18 +1,24 @@
-import './index.css'
+import './index.css';
 import { useNavigate } from 'react-router-dom';
+
 const Header = (props) => {
-    const {currentTab, changeTab} = props 
-    const classNameHome = currentTab === 'home'? 'current': ''
-    const classNameAbout = currentTab === 'about'? 'current': ''
-    const classNameHistory = currentTab === 'history'? 'current': ''
+    const { currentTab, changeTab } = props;
+    const classNameHome = currentTab === 'home' ? 'current' : '';
+    const classNameAbout = currentTab === 'about' ? 'current' : '';
+    const classNameHistory = currentTab === 'history' ? 'current' : '';
     const navigate = useNavigate();
+
     const setTab = (value) => {
-        changeTab(value)
-    }
-    const handleLogout= () => {
-        navigate('/login')
-        localStorage.setItem('isAuthenticated', false);
-    }
+        // console.log(value);
+        // console.log(currentTab);
+        changeTab(value);
+    };
+
+    const handleLogout = () => {
+        navigate('/login');
+        localStorage.setItem('isAuthenticated', 'false'); // Make sure to store 'false' as a string
+    };
+
     return (
         <div className="header-section">
             <h1 className="website-heading">Online Book Exchange</h1>
@@ -23,7 +29,7 @@ const Header = (props) => {
                 <p className={`tab-text`} onClick={() => handleLogout()}>Logout</p>
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default Header
+export default Header;

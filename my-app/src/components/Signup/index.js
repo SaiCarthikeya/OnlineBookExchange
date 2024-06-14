@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { addUser, findUser } from '../../db';
+import { firestore } from '../../firebase'; // Adjust the import path as needed
+import { collection, addDoc, getDocs, query, where } from 'firebase/firestore';
 import './index.css';
 
 const Signup = () => {
@@ -11,7 +12,7 @@ const Signup = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleSignup = () => {
+  const handleSignup = async () => {
     if (password !== confirmPassword) {
       setError('Passwords do not match');
       return;
@@ -20,18 +21,34 @@ const Signup = () => {
       setError('Mobile number must be 10 digits');
       return;
     }
-    if (findUser(username)) {
-      setError('Username already exists');
-      return;
-    }
     if (username === '' || password === '') {
         setError('Fill in the details');
         return;
     }
-    addUser(username, password);
-    console.log('Signup successful');
-    setError('');
-    navigate('/login');
+
+    // Check if the username already exists in Firestore
+    const usersRef = collection(firestore, 'users');
+    const q = query(usersRef, where('username', '==', username));
+    const querySnapshot = await getDocs(q);
+    if (!querySnapshot.empty) {
+      setError('Username already exists');
+      return;
+    }
+
+    try {
+      // Add a new user document to Firestore
+      await addDoc(usersRef, {
+        username,
+        password,
+        mobile
+      });
+      console.log('Signup successful');
+      setError('');
+      navigate('/login');
+    } catch (e) {
+      console.error('Error adding document: ', e);
+      setError('Error signing up. Please try again.');
+    }
   };
 
   return (
