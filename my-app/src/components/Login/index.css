@@ -6,6 +6,13 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
+}
+
+.auth-head {
+    position: relative;
+    top: 60px;
+    color: white;
 }
 
 .home-container {

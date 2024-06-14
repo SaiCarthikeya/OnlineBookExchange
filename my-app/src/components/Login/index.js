@@ -30,6 +30,7 @@ const Login = () => {
 };
   return (
     <div className="a-bg-container">
+      <h1 className='website-heading auth-head'>ONLINE BOOK EXCHANGE</h1>
       <div className="login-container">
         <h1 className="login-header">Login</h1>
         <input

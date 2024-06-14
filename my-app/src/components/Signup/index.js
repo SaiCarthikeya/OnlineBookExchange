@@ -6,6 +6,7 @@ import './index.css';
 const Signup = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [mobile, setMobile] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
@@ -13,6 +14,10 @@ const Signup = () => {
   const handleSignup = () => {
     if (password !== confirmPassword) {
       setError('Passwords do not match');
+      return;
+    }
+    if (mobile.length !== 10) {
+      setError('Mobile number must be 10 digits');
       return;
     }
     if (findUser(username)) {
@@ -31,6 +36,7 @@ const Signup = () => {
 
   return (
     <div className="a-bg-container">
+      <h1 className='website-heading auth-head'>ONLINE BOOK EXCHANGE</h1>
       <div className="signup-container">
         <h1 className="signup-header">Sign Up</h1>
         <input
@@ -38,6 +44,13 @@ const Signup = () => {
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           placeholder="Username"
+          className="input-box"
+        />
+        <input
+          type="text"
+          value={mobile}
+          onChange={(e) => setMobile(e.target.value)}
+          placeholder="Mobile Number"
           className="input-box"
         />
         <input
