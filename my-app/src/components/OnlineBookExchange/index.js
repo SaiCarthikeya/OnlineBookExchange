@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import Header from '../Header';
 import HistoryItem from '../HistoryItem';
+import { doc, deleteDoc } from 'firebase/firestore';
+import { firestore } from '../../firebase';
 import BooksContainer from '../BooksContainer';
 import './index.css';
 
@@ -12,11 +14,11 @@ class OnlineBookExchange extends Component {
         searchType: 'findBook',
         requestedBooks: [],
         searchValue: '',
-        isSearchOn: false,
+        isSearchOn: true,
         displayAdded: false,
         historySelector: 'requestedBooks',
         isAuthenticated: localStorage.getItem('isAuthenticated') === 'true',
-        userId: '', // Add this line to store the user ID
+        userId: '',
     };
 
     componentDidMount() {
@@ -68,14 +70,21 @@ class OnlineBookExchange extends Component {
         }
     };
 
-    removeBook = (id) => {
-        this.setState((previousState) => {
-            if (previousState.historySelector === 'requestedBooks') {
-                return { requestedBooks: previousState.requestedBooks.filter((eachBook) => eachBook.id !== id) };
+    removeBook = async (id) => {
+        try {
+            if (this.state.historySelector === 'requestedBooks') {
+                this.setState((prevState) => ({
+                    requestedBooks: prevState.requestedBooks.filter((book) => book.id !== id)
+                }));
+            } else {
+                // Remove the book from Firestore
+                await deleteDoc(doc(firestore, 'books', id));
             }
-            return { yourBooksList: previousState.yourBooksList.filter((eachBook) => eachBook.id !== id) };
-        });
+        } catch (error) {
+            console.error("Error removing book: ", error);
+        }
     };
+    
 
     renderHome = () => {
         const { searchType, searchValue, isSearchOn, displayAdded } = this.state;
@@ -103,7 +112,7 @@ class OnlineBookExchange extends Component {
                             />
                         </div>
                         <h1 className="home-header">{headContent}</h1>
-                        {isSearchOn && <BooksContainer searchValue={searchValue} searchType={searchType} addBook={this.addBook} />}
+                        {isSearchOn && <BooksContainer searchValue={searchValue} searchType={searchType} userId={this.state.userId} addBook={this.addBook} />}
                     </>
                 )}
             </div>
@@ -163,7 +172,6 @@ class OnlineBookExchange extends Component {
         if (!isAuthenticated) {
             return (
                 <div className="online-book-exchange-container">
-                    <Header changeTab={this.changeTab} />
                     {this.renderNotAuthenticated()}
                 </div>
             );
